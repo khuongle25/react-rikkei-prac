@@ -6,6 +6,7 @@ import ReactPaginate from 'react-paginate';
 // import handlePageClick from './handlePageClick';
 import ModalAddNew from './ModalAddNew';
 import ModalEditUser from './ModelEditUser';
+import _ from "lodash";
 
 const TableUsers = (props) => {
 
@@ -16,7 +17,9 @@ const TableUsers = (props) => {
     const [totalPages, setTotalPages] = useState(0);
 
     const [isShowModalAddNew, setIsShowModalAddNew] = useState(false);
+
     const [isShowModalEdit, setIsShowModalEdit] = useState(false);
+
     const [dataUserEdit, setDataUserEdit] = useState({});
 
     const handleClose = () => {
@@ -29,16 +32,19 @@ const TableUsers = (props) => {
     }
 
     const handleEditUser = (user) => {
-        // console.log(user);
         setDataUserEdit(user);
         setIsShowModalEdit(true);
     }
 
-
-
+    const handleEditUserFromModal = (user) => {
+        let cloneListUsers = _.cloneDeep(listUsers);
+        let index = listUsers.findIndex(item => item.id === user.id);
+        cloneListUsers[index].first_name = user.first_name;
+        setListUsers(cloneListUsers)
+    }
 
     useEffect(() => {
-        getUsers(2);
+        getUsers(1);
     }, [])
 
     const getUsers = async (page) => {
@@ -121,9 +127,8 @@ const TableUsers = (props) => {
                 show={isShowModalEdit}
                 dataUserEdit={dataUserEdit}
                 handleClose={handleClose}
-                handleUpdateTable={handleUpdateTable}
+                handleEditUserFromModal={handleEditUserFromModal}
             />
-
         </>
     )
 }
